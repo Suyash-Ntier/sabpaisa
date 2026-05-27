@@ -1,0 +1,180 @@
+<section id="homepage-{{ section.id }}" class="homepage-custom" style="font-family: {{ section.settings.font_family }}; background-color: {{ section.settings.background_color }};">
+  <div class="hp-hero" style="background-image: url({{ section.settings.hero_image | img_url: '2048x' }});">
+    <div class="hp-hero-overlay"></div>
+    <div class="hp-hero-inner">
+      <h1 class="hp-title">{{ section.settings.hero_heading }}</h1>
+      <p class="hp-subtitle">{{ section.settings.hero_subheading }}</p>
+      {% if section.settings.cta_text != blank %}
+        <a href="{{ section.settings.cta_link }}" class="hp-cta">{{ section.settings.cta_text }}</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="hp-content">
+    <div class="hp-features">
+      {% for block in section.blocks %}
+        {% if block.type == 'feature' %}
+          <div class="hp-feature">
+            {% if block.settings.icon != blank %}
+              <img class="hp-feature-icon" src="{{ block.settings.icon | img_url: '200x' }}" alt="{{ block.settings.title }}">
+            {% endif %}
+            <h3 class="hp-feature-title">{{ block.settings.title }}</h3>
+            <p class="hp-feature-text">{{ block.settings.text }}</p>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {% comment %}Promos, carousels, testimonials, image-text, gallery, newsletter blocks{% endcomment %}
+    {% for block in section.blocks %}
+      {% case block.type %}
+        {% when 'promo' %}
+          <div class="hp-promo" style="background-image: url({{ block.settings.promo_image | img_url: '1024x' }});">
+            <div class="hp-promo-inner">
+              <h3>{{ block.settings.promo_heading }}</h3>
+              <p>{{ block.settings.promo_text }}</p>
+              {% if block.settings.promo_link != blank %}
+                <a href="{{ block.settings.promo_link }}" class="hp-cta hp-cta--small">{{ block.settings.promo_cta }}</a>
+              {% endif %}
+            </div>
+          </div>
+
+        {% when 'product_carousel' %}
+          {% assign the_collection = collections[block.settings.collection] %}
+          {% if the_collection != nil and the_collection.products_count > 0 %}
+            <div class="hp-collection">
+              <h2 class="hp-section-heading">{{ block.settings.heading }}</h2>
+              <div class="hp-collection-grid">
+                {% for product in the_collection.products | slice: 0, block.settings.limit %}
+                  <div class="hp-product-card">
+                    <a href="{{ product.url }}">
+                      <img src="{{ product.featured_image | img_url: '480x480' }}" alt="{{ product.title }}">
+                      <div class="hp-product-meta">
+                        <div class="hp-product-title">{{ product.title }}</div>
+                        <div class="hp-product-price">{{ product.price | money }}</div>
+                      </div>
+                    </a>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+
+        {% when 'testimonial' %}
+          <div class="hp-testimonial">
+            <div class="hp-testimonial-inner">
+              <blockquote>{{ block.settings.quote }}</blockquote>
+              <cite>{{ block.settings.author }}</cite>
+            </div>
+          </div>
+
+        {% when 'image_text' %}
+          <div class="hp-image-text">
+            <div class="hp-image-text-media">
+              <img src="{{ block.settings.image | img_url: '800x' }}" alt="{{ block.settings.image_alt }}">
+            </div>
+            <div class="hp-image-text-body">
+              <h3>{{ block.settings.heading }}</h3>
+              <p>{{ block.settings.text }}</p>
+              {% if block.settings.link != blank %}
+                <a href="{{ block.settings.link }}" class="hp-cta hp-cta--small">{{ block.settings.button_text }}</a>
+              {% endif %}
+            </div>
+          </div>
+
+        {% when 'gallery' %}
+          <div class="hp-gallery">
+            <div class="hp-gallery-grid">
+              {% for i in (1..block.settings.images_count) %}
+                {% assign img = block.settings['image_' | append: i ] %}
+                {% if img != blank %}
+                  <div class="hp-gallery-item"><img src="{{ img | img_url: '800x' }}" alt="Gallery image"></div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+
+        {% when 'newsletter' %}
+          <div class="hp-newsletter">
+            <div class="hp-newsletter-inner">
+              <h3>{{ block.settings.heading }}</h3>
+              <p>{{ block.settings.text }}</p>
+              <form action="/contact#contact_form" method="post" accept-charset="UTF-8" class="hp-newsletter-form">
+                <input type="email" name="contact[email]" placeholder="Enter your email" required>
+                <button type="submit" class="hp-cta hp-cta--small">{{ block.settings.button_text }}</button>
+              </form>
+            </div>
+          </div>
+      {% endcase %}
+    {% endfor %}
+
+    <div class="hp-rich">{{ section.settings.rich_text }}</div>
+  </div>
+
+  {% schema %}
+  {
+    "name": "Homepage - Custom",
+    "settings": [
+      { "type": "image_picker", "id": "hero_image", "label": "Hero image" },
+      { "type": "text", "id": "hero_heading", "label": "Hero heading", "default": "Welcome" },
+      { "type": "text", "id": "hero_subheading", "label": "Hero subheading", "default": "Shop the collection" },
+      { "type": "text", "id": "cta_text", "label": "CTA text", "default": "Shop now" },
+      { "type": "url", "id": "cta_link", "label": "CTA link", "default": "/collections/all" },
+      { "type": "color", "id": "background_color", "label": "Background color", "default": "#ffffff" },
+      { "type": "select", "id": "font_family", "label": "Font family (applies to this section)", "options": [
+        { "value": "'Poppins', Arial, sans-serif", "label": "Poppins" },
+        { "value": "'Playfair Display', serif", "label": "Playfair Display" },
+        { "value": "'Roboto', Arial, sans-serif", "label": "Roboto" },
+        { "value": "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif", "label": "System UI" }
+      ], "default": "'Poppins', Arial, sans-serif" },
+      { "type": "richtext", "id": "rich_text", "label": "Rich content area", "default": "" }
+    ],
+    "blocks": [
+      { "type": "feature", "name": "Feature", "settings": [
+        { "type": "image_picker", "id": "icon", "label": "Icon" },
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "text", "id": "text", "label": "Text" }
+      ] },
+      { "type": "promo", "name": "Promo Banner", "settings": [
+        { "type": "image_picker", "id": "promo_image", "label": "Background image" },
+        { "type": "text", "id": "promo_heading", "label": "Heading" },
+        { "type": "text", "id": "promo_text", "label": "Text" },
+        { "type": "text", "id": "promo_cta", "label": "CTA text", "default": "Shop" },
+        { "type": "url", "id": "promo_link", "label": "CTA link" }
+      ] },
+      { "type": "product_carousel", "name": "Product Carousel", "settings": [
+        { "type": "collection", "id": "collection", "label": "Collection" },
+        { "type": "text", "id": "heading", "label": "Section heading", "default": "Featured" },
+        { "type": "number", "id": "limit", "label": "Product limit", "default": 4 }
+      ] },
+      { "type": "testimonial", "name": "Testimonial", "settings": [
+        { "type": "textarea", "id": "quote", "label": "Quote" },
+        { "type": "text", "id": "author", "label": "Author" }
+      ] },
+      { "type": "image_text", "name": "Image with text", "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "image_alt", "label": "Image alt text" },
+        { "type": "text", "id": "heading", "label": "Heading" },
+        { "type": "textarea", "id": "text", "label": "Text" },
+        { "type": "url", "id": "link", "label": "Link" },
+        { "type": "text", "id": "button_text", "label": "Button text", "default": "Learn more" }
+      ] },
+      { "type": "gallery", "name": "Gallery", "settings": [
+        { "type": "number", "id": "images_count", "label": "Images count", "default": 3 },
+        { "type": "image_picker", "id": "image_1", "label": "Image 1" },
+        { "type": "image_picker", "id": "image_2", "label": "Image 2" },
+        { "type": "image_picker", "id": "image_3", "label": "Image 3" },
+        { "type": "image_picker", "id": "image_4", "label": "Image 4" },
+        { "type": "image_picker", "id": "image_5", "label": "Image 5" }
+      ] },
+      { "type": "newsletter", "name": "Newsletter", "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Join our newsletter" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Get updates and offers." },
+        { "type": "text", "id": "button_text", "label": "Button text", "default": "Subscribe" }
+      ] }
+    ],
+    "max_blocks": 12,
+    "presets": [ { "name": "Homepage Custom", "category": "Homepage" } ]
+  }
+  {% endschema %}
+</section>
