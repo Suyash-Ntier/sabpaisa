@@ -1,0 +1,401 @@
+<section class="keffy-banner-{{ section.id }}">
+  <div class="keffy-banner__media">
+    {% if section.settings.desktop_bg != blank %}
+      {{
+        section.settings.desktop_bg
+        | image_url: width: 2200
+        | image_tag:
+          class: 'keffy-banner__bg desktop-only',
+          loading: 'eager',
+          widths: '1200, 1600, 2000, 2200'
+      }}
+    {% endif %}
+
+    {% if section.settings.mobile_bg != blank %}
+      {{
+        section.settings.mobile_bg
+        | image_url: width: 1000
+        | image_tag:
+          class: 'keffy-banner__bg mobile-only',
+          loading: 'eager',
+          widths: '500, 700, 900, 1000'
+      }}
+    {% endif %}
+  </div>
+
+  <div class="keffy-banner__overlay"></div>
+
+  <div class="page-width">
+    <div class="keffy-banner__content content-{{ section.settings.content_alignment }}">
+      {% if section.settings.top_text != blank %}
+        <div class="keffy-banner__top-text">
+          {{ section.settings.top_text }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h1 class="keffy-banner__heading">
+          {{ section.settings.heading }}
+        </h1>
+      {% endif %}
+
+      {% if section.settings.subheading != blank %}
+        <div class="keffy-banner__subheading">
+          {{ section.settings.subheading }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.button_label != blank %}
+        <a href="{{ section.settings.button_link }}" class="keffy-banner__button">
+          {{ section.settings.button_label }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .keffy-banner-{{ section.id }} {
+    position: relative;
+    overflow: hidden;
+    min-height: {{ section.settings.desktop_height }}px;
+    display: flex;
+    align-items: center;
+  }
+
+  .keffy-banner-{{ section.id }} .keffy-banner__media {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  .keffy-banner-{{ section.id }} .keffy-banner__bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .keffy-banner-{{ section.id }} .mobile-only {
+    display: none;
+  }
+
+  .keffy-banner-{{ section.id }} .keffy-banner__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,{{ section.settings.overlay_opacity }});
+    z-index: 2;
+  }
+
+  .keffy-banner-{{ section.id }} .page-width {
+    position: relative;
+    z-index: 5;
+    width: 100%;
+  }
+
+  .keffy-banner-{{ section.id }} .keffy-banner__content {
+    max-width: {{ section.settings.content_width }}px;
+    padding-top: {{ section.settings.desktop_padding_top }}px;
+    padding-bottom: {{ section.settings.desktop_padding_bottom }}px;
+  }
+
+  .keffy-banner-{{ section.id }} .content-left {
+    margin-right: auto;
+    text-align: left;
+  }
+
+  .keffy-banner-{{ section.id }} .content-center {
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .keffy-banner-{{ section.id }} .content-right {
+    margin-left: auto;
+    text-align: left;
+  }
+
+  .keffy-banner-{{ section.id }} .keffy-banner__top-text {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 28px;
+    color: {{ section.settings.top_text_color }};
+  }
+
+  .keffy-banner-{{ section.id }} .keffy-banner__heading {
+    margin: 0;
+    color: {{ section.settings.heading_color }};
+    font-size: {{ section.settings.heading_size }}px;
+    line-height: 1.15;
+    font-weight: 500;
+  }
+
+  .keffy-banner-{{ section.id }} .keffy-banner__subheading {
+    margin-top: 28px;
+    color: {{ section.settings.subheading_color }};
+    font-size: {{ section.settings.subheading_size }}px;
+    line-height: 1.5;
+  }
+
+  .keffy-banner-{{ section.id }} .keffy-banner__button {
+    margin-top: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 260px;
+    min-height: 64px;
+    padding: 0 40px;
+    background: {{ section.settings.button_bg }};
+    color: {{ section.settings.button_text }};
+    text-decoration: none;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: 0.3s ease;
+  }
+
+  .keffy-banner-{{ section.id }} .keffy-banner__button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+  }
+
+  @media screen and (max-width: 989px) {
+    .keffy-banner-{{ section.id }} {
+      min-height: {{ section.settings.mobile_height }}px;
+    }
+
+    .keffy-banner-{{ section.id }} .desktop-only {
+      display: none;
+    }
+
+    .keffy-banner-{{ section.id }} .mobile-only {
+      display: block;
+    }
+
+    .keffy-banner-{{ section.id }} .keffy-banner__content {
+      max-width: 100%;
+      padding-top: {{ section.settings.mobile_padding_top }}px;
+      padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
+    }
+
+    .keffy-banner-{{ section.id }} .keffy-banner__heading {
+      font-size: {{ section.settings.mobile_heading_size }}px;
+    }
+
+    .keffy-banner-{{ section.id }} .keffy-banner__top-text {
+      font-size: 18px;
+    }
+
+    .keffy-banner-{{ section.id }} .keffy-banner__subheading {
+      font-size: 18px;
+    }
+
+    .keffy-banner-{{ section.id }} .keffy-banner__button {
+      width: 100%;
+      min-width: 100%;
+      min-height: 56px;
+      font-size: 18px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Keffy Image Banner",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "desktop_bg",
+      "label": "Desktop background image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_bg",
+      "label": "Mobile background image"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Content alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Content width",
+      "min": 300,
+      "max": 900,
+      "step": 20,
+      "default": 520
+    },
+    {
+      "type": "text",
+      "id": "top_text",
+      "label": "Top text",
+      "default": "Sign Up & Save"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Science backed innovative herbaceuticals"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Start your wellness journey today."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "SHOP NOW"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "color",
+      "id": "top_text_color",
+      "label": "Top text color",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#003D73"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading color",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "button_bg",
+      "label": "Button background",
+      "default": "#FF3900"
+    },
+    {
+      "type": "color",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 0.8,
+      "step": 0.1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "desktop_height",
+      "label": "Desktop height",
+      "min": 500,
+      "max": 1000,
+      "step": 20,
+      "default": 700
+    },
+    {
+      "type": "range",
+      "id": "mobile_height",
+      "label": "Mobile height",
+      "min": 400,
+      "max": 900,
+      "step": 20,
+      "default": 620
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Desktop heading size",
+      "min": 32,
+      "max": 90,
+      "step": 2,
+      "default": 58
+    },
+    {
+      "type": "range",
+      "id": "mobile_heading_size",
+      "label": "Mobile heading size",
+      "min": 26,
+      "max": 60,
+      "step": 2,
+      "default": 38
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "label": "Subheading size",
+      "min": 14,
+      "max": 40,
+      "step": 1,
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_top",
+      "label": "Desktop top spacing",
+      "min": 20,
+      "max": 250,
+      "step": 10,
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_bottom",
+      "label": "Desktop bottom spacing",
+      "min": 20,
+      "max": 250,
+      "step": 10,
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile top spacing",
+      "min": 20,
+      "max": 180,
+      "step": 10,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile bottom spacing",
+      "min": 20,
+      "max": 180,
+      "step": 10,
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "Keffy Image Banner"
+    }
+  ]
+}
+{% endschema %}
